@@ -39,10 +39,23 @@ public class TakingTurnsQueue
         }
         else
         {
+            // Get the next person in the queue
+            // If they have no turns left, then do not add them back to the queue.
+            // If they have turns left, then decrement their turns and add them back to the queue.
+            // Problem:
+            // In the original code we did not include the logic to handle infinite turns.
+            // Base on the requirement, if turns is 0 or less, then they have infinite turns.
             Person person = _people.Dequeue();
             if (person.Turns > 1)
             {
                 person.Turns -= 1;
+                _people.Enqueue(person);
+            }
+            // To fix the problem: We have to implement the logic to handle infinite turns, we can check if the turns is 0 or less
+            // If turns is 0 or less, then they have infinite turns and will stay in the queuw forever
+            else if (person.Turns <= 0)
+            {
+                person.Turns = -1; // Set to -1 to indicate infinite turns
                 _people.Enqueue(person);
             }
 

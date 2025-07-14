@@ -22,11 +22,17 @@
             throw new InvalidOperationException("The queue is empty.");
         }
 
-        // Find the index of the item with the highest priority to remove
+        // Find the index of the item with the highest priority to remove.
+        // The  _queue.Count - 1, means that the iteration misses the last item in the queue.
+        // Based on the requirement, higher priority number are better.
+        // And if there are more than one item with the highest priority, then the item closest to the front of the queue will be removed and its value returned (FIFO).
+        // So we start from index 1 and compare with the first item at index 0
         var highPriorityIndex = 0;
         for (int index = 1; index < _queue.Count - 1; index++)
         {
-            if (_queue[index].Priority >= _queue[highPriorityIndex].Priority)
+            // For the program to be able to iterate all the items in the queue, we need to change the >= operator to > operator
+            // This way, the program will be able to iterate all the items in the queue and find the item with the highest priority.
+            if (_queue[index].Priority > _queue[highPriorityIndex].Priority)
                 highPriorityIndex = index;
         }
 
