@@ -22,7 +22,33 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var Dictionary = new Dictionary<string, double>();
+        foreach (var word in words)
+        {
+            var reversed = new string(word.Reverse().ToArray());
+            if (Dictionary.ContainsKey(reversed))
+            {
+                Dictionary[reversed] += 1;
+            }
+            else
+            {
+                Dictionary[reversed] = 1;
+            }
+        }
+        var pairs = new List<string>();
+        foreach (var word in words)
+        {
+            var reversed = new string(word.Reverse().ToArray());
+            if (Dictionary.ContainsKey(word) && Dictionary.ContainsKey(reversed) && word != reversed)
+            {
+                pairs.Add($"{word} & {reversed}");
+                // Remove both words to avoid duplicates
+                Dictionary.Remove(word);
+                Dictionary.Remove(reversed);
+            }
+
+        }
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -41,11 +67,22 @@ public static class SetsAndMaps
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename))
         {
-            var fields = line.Split(",");
+            var fields = line.Split(","); // Split the line by commas
             // TODO Problem 2 - ADD YOUR CODE HERE
+            if (fields.Length < 4) continue; // Ensure there are enough fields
+            var degree = fields[3].Trim(); // Get the degree from the 4th column
+            if (string.IsNullOrEmpty(degree)) continue; // Skip empty degrees
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree]++; // Increment the count if the degree already exists
+            }
+            else
+            {
+                degrees[degree] = 1; // Initialize the count if the degree does not exist
+            }
         }
 
-        return degrees;
+        return degrees; // Return the dictionary containing degree counts
     }
 
     /// <summary>
@@ -67,6 +104,8 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
+        if (string.IsNullOrWhiteSpace(word1) || string.IsNullOrWhiteSpace(word2))
+            return false;
         return false;
     }
 
@@ -86,21 +125,41 @@ public static class SetsAndMaps
     /// </summary>
     public static string[] EarthquakeDailySummary()
     {
-        const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
-        using var client = new HttpClient();
-        using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-        using var jsonStream = client.Send(getRequestMessage).Content.ReadAsStream();
-        using var reader = new StreamReader(jsonStream);
-        var json = reader.ReadToEnd();
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"; // URL to fetch earthquake data
+        using var client = new HttpClient(); // Create an instance of HttpClient to send requests
+        using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri); // Create a GET request message for the specified URI
+        using var jsonStream = client.Send(getRequestMessage).Content.ReadAsStream(); // Send the request and read the response stream
+        using var reader = new StreamReader(jsonStream); // Create a StreamReader to read the JSON data from the stream
+        var json = reader.ReadToEnd(); // Read the entire JSON data as a string
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; // Set options to ignore case when matching property names
 
-        var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
+
+        var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options); // Deserialize the JSON string into a FeatureCollection object using the specified options
 
         // TODO Problem 5:
         // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        var earthquakeDescriptions = new List<string>(); // List to hold the descriptions
+        if (featureCollection?.Features == null)
+        {
+            return Array.Empty<string>(); // Return empty array if no features
+        }
+        foreach (var feature in featureCollection.Features)
+        {
+            var place = feature.Properties.Place; // Get the place of the earthquake
+            if (string.IsNullOrEmpty(place))
+            {
+                continue; // Skip if place is null or empty
+            }
+            var magnitude = feature.Properties.Mag; // Get the magnitude of the earthquake
+            if (magnitude < 0)
+            {
+                continue; // Skip if magnitude is negative
+            }
+            earthquakeDescriptions.Add($"{place} - Magnitude: {magnitude}"); // Create the description string
+        }
+        return earthquakeDescriptions.ToArray();
     }
 }
