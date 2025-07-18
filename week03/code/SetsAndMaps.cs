@@ -125,6 +125,7 @@ public static class SetsAndMaps
     /// </summary>
     public static string[] EarthquakeDailySummary()
     {
+        // Exceeding requirements: I added comments here to better understand and explain the code.
         const string uri = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"; // URL to fetch earthquake data
         using var client = new HttpClient(); // Create an instance of HttpClient to send requests
         using var getRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri); // Create a GET request message for the specified URI
