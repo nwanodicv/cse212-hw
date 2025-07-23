@@ -25,30 +25,30 @@ public static class SetsAndMaps
         var Dictionary = new Dictionary<string, double>();
         foreach (var word in words)
         {
-            var reversed = new string(word.Reverse().ToArray());
-            if (Dictionary.ContainsKey(reversed))
+            var reversed = new string(word.Reverse().ToArray()); // Reverse the word
+            if (Dictionary.ContainsKey(reversed)) // Check if the reversed word is already in the dictionary
             {
-                Dictionary[reversed] += 1;
+                Dictionary[reversed] += 1; // Increment the count if it exists
             }
             else
             {
-                Dictionary[reversed] = 1;
+                Dictionary[reversed] = 1; // Initialize the count if it does not exist
             }
         }
-        var pairs = new List<string>();
-        foreach (var word in words)
+        var pairs = new List<string>(); // List to hold the pairs of words
+        foreach (var word in words) // Iterate through the original words
         {
-            var reversed = new string(word.Reverse().ToArray());
+            var reversed = new string(word.Reverse().ToArray()); 
             if (Dictionary.ContainsKey(word) && Dictionary.ContainsKey(reversed) && word != reversed)
             {
-                pairs.Add($"{word} & {reversed}");
+                pairs.Add($"{word} & {reversed}"); // Add the pair to the list
                 // Remove both words to avoid duplicates
-                Dictionary.Remove(word);
-                Dictionary.Remove(reversed);
+                Dictionary.Remove(word); // Remove the original word
+                Dictionary.Remove(reversed); // Remove the reversed word
             }
 
         }
-        return pairs.ToArray();
+        return pairs.ToArray(); // Convert the list to an array and return it
     }
 
     /// <summary>
