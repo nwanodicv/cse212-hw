@@ -125,30 +125,27 @@ public class TakingTurnsQueueTests
         players.AddPerson(tim.Name, tim.Turns); // Add Tim to the queue with zero turns (infinite)
         players.AddPerson(sue.Name, sue.Turns); // Add Sue to the queue with 3 turns
 
-        for (int i = 0; i < 10; i++) // Loop to run the queue 10 times
+        int i = 0;
+        Person person = null;
+        for (; i < 10; i++) // Loop to run the queue 10 times
         {
-            var person = players.GetNextPerson(); // Get the next person from the queue
+            person = players.GetNextPerson(); // Get the next person from the queue
             Assert.IsNotNull(person, "Person should not be null."); // Ensure person is not null
             Assert.AreEqual(expectedResult[i].Turns, person.Turns, "Turns should match expected value."); // Check turns match expected
             Assert.IsNotNull(person.Name, "Name should not be null."); // Ensure name is not null
             Assert.IsFalse(string.IsNullOrWhiteSpace(person.Name), "Name should not be empty or whitespace."); // Ensure name is not empty or whitespace
-        }
             Assert.AreEqual(expectedResult[i].Name, person.Name); // Check name matches expected
-        }       
+        }
         // Verify that the people with infinite turns really do have infinite turns.
         var infinitePerson = players.GetNextPerson(); // Get the next person from the queue 
-        {
-            var person = players.GetNextPerson(); // Get the next person from the queue
-            Assert.IsNotNull(infinitePerson, "Infinite person should not be null."); // Ensure infinite person is not null
-            Assert.AreEqual(timTurns, infinitePerson.Turns, "People with infinite turns should not have their turns parameter modified to a very big number. A very big number is not infinite."); // Check that the turns of the infinite person match the expected zero turns
-            Assert.IsNotNull(infinitePerson.Name, "Name should not be null."); // Ensure name is not null
-            Assert.IsFalse(string.IsNullOrWhiteSpace(infinitePerson.Name), "Name should not be empty or whitespace."); // Ensure name is not empty or whitespace
-            Assert.AreEqual(tim.Name, infinitePerson.Name); // Check name matches expected
-            Assert.AreEqual(expectedResult[i].Name, person.Name); // Check name matches expected
-        }
+        Assert.IsNotNull(infinitePerson, "Infinite person should not be null."); // Ensure infinite person is not null
+        Assert.AreEqual(timTurns, infinitePerson.Turns, "People with infinite turns should not have their turns parameter modified to a very big number. A very big number is not infinite."); // Check that the turns of the infinite person match the expected zero turns
+        Assert.IsNotNull(infinitePerson.Name, "Name should not be null."); // Ensure name is not null
+        Assert.IsFalse(string.IsNullOrWhiteSpace(infinitePerson.Name), "Name should not be empty or whitespace."); // Ensure name is not empty or whitespace
+        Assert.AreEqual(tim.Name, infinitePerson.Name); // Check name matches expected
 
         // Verify that the people with infinite turns really do have infinite turns.
-        var infinitePerson = players.GetNextPerson();
+        infinitePerson = players.GetNextPerson();
         Assert.AreEqual(timTurns, infinitePerson.Turns, "People with infinite turns should not have their turns parameter modified to a very big number. A very big number is not infinite.");
     }
 
