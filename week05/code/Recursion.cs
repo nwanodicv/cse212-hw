@@ -181,25 +181,18 @@ public static class Recursion
             currPath = new List<ValueTuple<int, int>>(); // Initialize the current path
         }
 
-        // currPath.Add((1,2)); // Use this syntax to add to the current path
+        //currPath.Add((1,2)); // Use this syntax to add to the current path
 
 
         // TODO Start Problem 5
         // ADD CODE HERE
-        // Base case: if the current position is out of bounds or not walkable, return
-        if (x < 0 || x >= maze.Width || y < 0 || y >= maze.Height || !maze.IsWalkable(x, y))
+        currPath.Add((1, 2)); // Add the current position to the path
+
+        results.Add(currPath.AsString()); // Add the current path as a string to the results
+        // Check if the current position is the end of the maze
+        if (maze.IsEnd(x, y))
         {
-            return; // Out of bounds or not walkable, stop exploring this path
+            return; // If we reached the end, return
         }
-        // Base case: if the current position is the end square, add the path to results
-        // Check if the current position is the end square using maze.End property (assumed to be ValueTuple<int, int>)
-        if (maze.IsEndSquare(x, y))
-        {
-            currPath.Add((x, y)); // Add the end square to the current path
-            results.Add(string.Join(" -> ", currPath.Select(pos => $"({pos.Item1},{pos.Item2})"))); // Add the current path to results
-            currPath.RemoveAt(currPath.Count - 1); // Remove the end square from the current path to backtrack
-            return; // Found a valid path, stop exploring further
-        }                          
-        // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
-        }
+    }
 }
