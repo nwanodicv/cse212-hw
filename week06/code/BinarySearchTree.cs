@@ -2,7 +2,7 @@ using System.Collections;
 
 public class BinarySearchTree : IEnumerable<int>
 {
-    private Node? _root;
+    private Node? _root; // The root of the BST
 
     /// <summary>
     /// Insert a new node in the BST.
@@ -81,6 +81,15 @@ public class BinarySearchTree : IEnumerable<int>
     private void TraverseBackward(Node? node, List<int> values)
     {
         // TODO Problem 3
+        if (node is not null) // Check if the node is not null
+        {
+            TraverseBackward(node.Right, values); // Traverse the right subtree first
+            // Add the current node's data to the values list
+            values.Add(node.Data); // Add the current node's data to the list
+            // Then traverse the left subtree
+            TraverseBackward(node.Left, values); // Traverse the left subtree
+            // This ensures that the values are added in reverse order (right, current, left)
+        }
     }
 
     /// <summary>
